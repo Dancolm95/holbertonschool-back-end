@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 """module to interact with an api"""
+
+
 import csv
 import requests
 import sys
@@ -8,6 +10,8 @@ import sys
 url = "https://jsonplaceholder.typicode.com"  # base url
 
 if __name__ == "__main__":
+    """
+    """
         response_todos = requests.get(f"{url}/todos?userId={sys.argv[1]}")
             response_users = requests.get(f"{url}/users/{sys.argv[1]}")
 
