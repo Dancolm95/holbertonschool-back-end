@@ -2,26 +2,30 @@
 
 """module to interact with an api"""
 
-
-import csv
 import requests
 import sys
 
-url = "https://jsonplaceholder.typicode.com"  # base url
+API = 'https://jsonplaceholder.typicode.com'
 
 if __name__ == "__main__":
-    """
-    """
-        response_todos = requests.get(f"{url}/todos?userId={sys.argv[1]}")
-            response_users = requests.get(f"{url}/users/{sys.argv[1]}")
+    # Obtener informacion de un empleado en particular
+    RES_TASK = requests.get(f'{API}/todos?userId={sys.argv[1]}')
+    RES_USERS = requests.get(f'{API}/users/{sys.argv[1]}')
 
-                todos = response_todos.json()
-                    user = response_users.json()
+    # deserializado de datos
+    tasks = RES_TASK.json()
+    users = RES_USERS.json()
 
-                        with open(f"{user.get('id')}.csv", mode='w') as file:
-                                write = csv.writer(file, delimiter=',',
-                                                           quotechar='"', quoting=csv.QUOTE_ALL)
+    completed = []
+    # iteramos las task completadas y lo guardamos en completed.
+    for task in tasks:
+        if task.get('completed'):
+            completed.append(task)
 
-                                                                   for todo in todos:
-                                                                               write.writerow([user.get('id'), user.get('username'),
-                                                                                                          todo.get('completed'), todo.get('title')])
+    # Empleado y cantidad de tareas completadas y total
+    print(f"Employee {users.get('name')} is done with\
+ tasks({len(completed)}/{len(tasks)}):")
+
+    # Iteramos todas las tareas completadas.
+    for t in completed:
+        print(f"\t {t.get('title')}")
