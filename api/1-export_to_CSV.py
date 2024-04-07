@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 """module to interact with an api"""
 import csv
