@@ -1,29 +1,28 @@
 #!/usr/bin/python3
-""" Module that display data of the employee """
+
+"""   Gather data from and API  """
+
 import requests
 import sys
 
-API = 'https://jsonplaceholder.typicode.com'
+if __name__ == '__main__':
 
-if __name__ == "__main__":
-    # Obtener informacion de un empleado en particular
-    RES_TASK = requests.get(f'{API}/todos?userId={sys.argv[1]}')
-    RES_USERS = requests.get(f'{API}/users/{sys.argv[1]}')
-
-    # deserializado de datos
-    tasks = RES_TASK.json()
-    users = RES_USERS.json()
-
-    completed = []
-    # iteramos las task completadas y lo guardamos en completed.
-    for task in tasks:
-        if task.get('completed'):
-            completed.append(task)
-
-    # Empleado y cantidad de tareas completadas y total
-    print(f"Employee {users.get('name')} is done with\
- tasks({len(completed)}/{len(tasks)}):")
-
-    # Iteramos todas las tareas completadas.
-    for t in completed:
-        print(f"\t {t.get('title')}")
+    id = sys.argv[1]
+    task_title = []
+    complete = 0
+    total = 0
+    url_user = "https://jsonplaceholder.typicode.com/users/" + id
+    result = requests.get(url_user).json()
+    name = result.get('name')
+    todos = "https://jsonplaceholder.typicode.com/todos/"
+    res_task = requests.get(todos).json()
+    for i in res_task:
+        if i.get('userId') == int(id):
+            if i.get('completed') is True:
+                task_title.append(i['title'])
+                complete += 1
+            total += 1
+    print("Employee {} is done with tasks({}/{}):"
+          .format(name, complete, total))
+    for x in task_title:
+        print("\t {}".format(x))
