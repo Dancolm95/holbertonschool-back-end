@@ -1,28 +1,22 @@
 #!/usr/bin/python3
-
-"""   Gather data from and API  """
-
+"""Module to interact with an api"""
 import requests
 import sys
 
-if __name__ == '__main__':
+url = "https://jsonplaceholder.typicode.com"
 
-    id = sys.argv[1]
-    task_title = []
-    complete = 0
-    total = 0
-    url_user = "https://jsonplaceholder.typicode.com/users/" + id
-    result = requests.get(url_user).json()
-    name = result.get('name')
-    todos = "https://jsonplaceholder.typicode.com/todos/"
-    res_task = requests.get(todos).json()
-    for i in res_task:
-        if i.get('userId') == int(id):
-            if i.get('completed') is True:
-                task_title.append(i['title'])
-                complete += 1
-            total += 1
-    print("Employee {} is done with tasks({}/{}):"
-          .format(name, complete, total))
-    for x in task_title:
-        print("\t {}".format(x))
+if __name__ == "__main__":
+    response_todos = requests.get(f"{url}/todos?userId={sys.argv[1]}")
+    response_users = requests.get(f"{url}/users/{sys.argv[1]}")
+
+    todos = response_todos.json()
+    user = response_users.json().get('name')
+
+    done_taks = list()
+    for todo in todos:
+        if todo.get('completed'):
+            done_taks.append(todo)
+    print(
+        f"Employee {user} is done with tasks({len(done_taks)}/{len(todos)}):")
+    for todo in done_taks:
+        print(f"\t {todo.get('title')}")
